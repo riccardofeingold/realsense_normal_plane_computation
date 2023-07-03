@@ -26,6 +26,7 @@ set(THIS_PACKAGE_INCLUDE_DEPENDS
   Eigen3
   OpenCV
   cv_bridge
+  realsense_msgs
 )
 find_package(ament_cmake REQUIRED)
 foreach(Dependency IN ITEMS ${THIS_PACKAGE_INCLUDE_DEPENDS})

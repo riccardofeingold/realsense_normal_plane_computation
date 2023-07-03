@@ -11,6 +11,7 @@
 #include "sensor_msgs/msg/image.hpp"
 #include "geometry_msgs/msg/quaternion.hpp"
 #include "std_msgs/msg/header.hpp"
+#include "realsense_msgs/msg/realsense.hpp"
 
 #include <librealsense2/rs.hpp>
 #include <librealsense2/rsutil.h>
@@ -35,22 +36,24 @@ class MagneckoRealsenseBroadcaster : public rclcpp::Node
     ~MagneckoRealsenseBroadcaster();
   private:
     // using StatePublisher = realtime_tools::RealtimePublisher<magnecko_realsense_msgs::msg::DepthCameraRange>;
-    using StatePublisherNormal = realtime_tools::RealtimePublisher<geometry_msgs::msg::Quaternion>;
+    using StatePublisherNormal = realtime_tools::RealtimePublisher<realsense_msgs::msg::Realsense>;
     using StatePublisherPointCloud = realtime_tools::RealtimePublisher<sensor_msgs::msg::PointCloud2>;
     using RvizVectorPublisher = realtime_tools::RealtimePublisher<visualization_msgs::msg::Marker>;
     using ImagePublisher = realtime_tools::RealtimePublisher<sensor_msgs::msg::Image>;
 
-    rclcpp::Publisher<geometry_msgs::msg::Quaternion>::SharedPtr normal_distance_publisher_;
+    rclcpp::Publisher<realsense_msgs::msg::Realsense>::SharedPtr normal_distance_publisher_;
     rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr pointcloud_publisher_;
     rclcpp::Publisher<visualization_msgs::msg::Marker>::SharedPtr normal_vector_publisher_;
     rclcpp::Publisher<visualization_msgs::msg::Marker>::SharedPtr points_rviz_publisher_;
     rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr image_publisher_;
+    rclcpp::Publisher<visualization_msgs::msg::Marker>::SharedPtr middle_point_;
     
     std::unique_ptr<StatePublisherNormal> realtime_publisher_norm_dist_;
     std::unique_ptr<StatePublisherPointCloud> realtime_publisher_pointcloud_;
     std::unique_ptr<RvizVectorPublisher> realtime_publisher_rviz_points_;
     std::unique_ptr<RvizVectorPublisher> realtime_publisher_rviz_arrow_;
     std::unique_ptr<ImagePublisher> realtime_publisher_image_;
+    std::unique_ptr<RvizVectorPublisher> realtime_publisher_rviz_middle_points;
 
     std::vector<rs2::pipeline> pipelines_;
     rs2::context ctx_;
@@ -59,6 +62,7 @@ class MagneckoRealsenseBroadcaster : public rclcpp::Node
     Eigen::Vector4f plane_parameters_;
     pcl::PointCloud<pcl::PointXYZ>::Ptr points_to_pcl(const rs2::points& points);
     Eigen::Vector3f convert_depth_to_phys_coord(float x, float y, float depth_distance);
+    Eigen::Vector2f convert_phys_coord_to_pixel_coordinate(float x, float y, float z);
 
     // create time variables for the callbacks
     rclcpp::TimerBase::SharedPtr normal_vector_timer_;
