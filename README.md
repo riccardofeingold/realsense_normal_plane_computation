@@ -1,3 +1,27 @@
+# How to use this repository 
+First of all, this code has to run on Ubuntu Jammy 22.04 and you need to install ROS2 humble. 
+To install the latter have a look here: https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debians.html
+
+Having this setup, you first need to create the following folder structure *random_name/src/*. Inside the *src* you clone 
+this repository.
+```bash
+    git clone https://github.com/riccardofeingold/realsense_normal_plane_computation.git .
+```
+
+Now, go one level up using *cd ../*. You should be now inside the *random_name* folder.
+At this point, use colcon to build files:
+```bash
+    colcon build
+```
+Before you can use ROS2 to run the node you always have to source the setup.bash file first:
+```bash
+    . install/setup.bash
+```
+
+Now you can run the node using:
+```bash
+    ros2 run magnecko_realsense_node magnecko_realsense_node
+```
 # librealsense installation guide
 
 Created: March 18, 2023 11:33 AM
